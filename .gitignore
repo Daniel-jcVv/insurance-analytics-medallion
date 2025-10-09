@@ -1,0 +1,47 @@
+# Environment variables
+.env
+
+# MinIO data
+minio/data/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data files - Keep raw CSVs (small, part of project), ignore processed data
+data/processed/
+data/temp/
+# Keep data/raw/ in repo
+
+# Logs
+logs/
+
+# Temporary files
+tmp/
+
+# ignore temporary notes
+notes/
+

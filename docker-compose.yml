@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  minio:
+    image: minio/minio:latest
+    container_name: insurance-minio
+    ports:
+      - "9100:9000"      # MinIO API
+      - "9101:9001"      # MinIO Console
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: adminpassword123
+    volumes:
+      - ./minio/data:/data
+    command: server /data --console-address ":9001"
+    networks:
+      - insurance-net
+    restart: unless-stopped
+
+networks:
+  insurance-net:
+    driver: bridge
