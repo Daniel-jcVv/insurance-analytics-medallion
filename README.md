@@ -1,6 +1,6 @@
 # Insurance Claims Analytics - MinIO + Microsoft Fabric
 
-End-to-end data engineering project implementing **Medallion Architecture** for insurance claims analysis, using local MinIO as an alternative to Azure Data Lake Storage and Microsoft Fabric for processing and visualization.
+End-to-end data engineering project implementing **Medallion Architecture** for insurance claims analysis, using local MinIO and Microsoft Fabric for processing and visualization.
 
 > **Approach:** MVP (Minimum Viable Product) built incrementally in functional stages with small, manageable datasets (~50 records) to demonstrate data engineering skills.
 
@@ -80,7 +80,7 @@ cp .env.example .env
 
 ```bash
 # Start MinIO with Docker Compose
-docker-compose up -d
+docker compose up -d
 
 # Verify it's running
 docker ps
@@ -93,16 +93,29 @@ docker ps
 ### 3. Upload Sample Data
 
 ```bash
-# Upload data to MinIO (50 records per file - already in data/raw/)
+# Install dependencies
+pip install -r requirements.txt
+
+# Upload data to MinIO (simple version)
 python scripts/upload_to_minio.py
+
+# OR use production version (with retry logic and progress bars)
+python scripts/upload_to_minio_production.py
 ```
 
-This will upload:
-- `data/raw/customers.csv` (50 customers)
-- `data/raw/policies.csv` (50 policies)
-- `data/raw/claims.csv` (50 claims)
+**Uploaded files:**
+- `data/raw/customers.csv` → `bronze/customers.csv`
+- `data/raw/policies.csv` → `bronze/policies.csv`
+- `data/raw/claims.csv` → `bronze/claims.csv`
 
 > **Note:** We use small datasets (50 records) for MVP - sufficient to validate logic and demonstrate understanding.
+
+### 3.1 Optional: Run Tests
+
+```bash
+# Verify uploads work correctly
+pytest tests/ -v
+```
 
 ### 4. Connect Fabric to MinIO
 
@@ -177,33 +190,33 @@ This project provides insights into:
 
 ```
 insurance-claims/
-├── docker-compose.yml          # MinIO configuration
-├── requirements.txt            # Python dependencies
-├── .env.example               # Environment variables template
-├── .gitignore                 # Files to ignore
-├── README.md                  # This file
-├── CLAUDE.md                  # Developer guide for AI assistants
+├── docker-compose.yml               # MinIO configuration
+├── requirements.txt                 # Python dependencies
+├── .env.example                    # Environment variables template
+├── .gitignore                      # Files to ignore
+├── README.md                       # This file
 │
 ├── data/
-│   └── raw/                   # CSV files (50 records each)
+│   └── raw/                        # CSV files (50 records each)
 │       ├── customers.csv
 │       ├── policies.csv
 │       └── claims.csv
 │
 ├── scripts/
-│   └── upload_to_minio.py     # Upload data to MinIO
+│   ├── upload_to_minio.py          # Simple upload script
+│   └── upload_to_minio_production.py  # Production version (retry + logging)
 │
-├── docs/                      # Documentation (empty - to be populated)
+├── tests/
+│   ├── test_upload.py              # Integration tests
+│   └── README.md                   # Test documentation
 │
-├── notebooks/                 # Local notebooks (empty)
-│
-├── Notebook+1.ipynb           # Fabric notebook export (Bronze→Silver→Gold)
+├── Notebook+1.ipynb                # Fabric notebook export (Bronze→Silver→Gold)
 │
 ├── minio/
-│   └── data/                  # MinIO persistent storage (gitignored)
+│   └── data/                       # MinIO persistent storage (gitignored)
 │
 └── notes/
-    └── CLAUDE.md              # Detailed architecture guide (Spanish)
+    └── *.md                        # Project notes and guides
 ```
 
 ## 🎯 Implementation Stages (MVP)
@@ -234,25 +247,44 @@ insurance-claims/
 - 🔲 Pipeline re-run with larger dataset
 - 🔲 Performance documented
 
-### Stage 6 (Optional): PRODUCTION-READY - "It's Robust"
-- 🔲 Data quality checks added
-- 🔲 Error handling implemented
-- 🔲 Automated orchestration configured
+
+
+## 📈 Scalability & Production Readiness
+
+This project demonstrates pragmatic through **two upload scripts**:
+
+### Simple Version (`upload_to_minio.py`)
+**Use for:** MVP, demos, small datasets
+- Basic error handling
+- File validation
+
+
+### Production Version (`upload_to_minio_production.py`)
+**Use for:** Larger datasets, production environments
+- Retry logic with exponential backoff
+- Parallel uploads (4 workers)
+- Logging to file
+- Progress bars
+
+**Philosophy:** Start simple, add complexity when justified. The value is in the **Medallion Architecture + Fabric transformations**.
 
 ## 🔧 Useful Commands
 
 ```bash
 # View MinIO logs
-docker-compose logs -f minio
+docker compose logs -f minio
 
 # Stop MinIO
-docker-compose down
+docker compose down
 
 # Clean MinIO data (destructive)
-docker-compose down -v
+docker compose down -v
 
-# Upload data to MinIO
+# Upload data to MinIO (simple)
 python scripts/upload_to_minio.py
+
+# Upload data to MinIO (production)
+python scripts/upload_to_minio_production.py
 
 # Verify data in MinIO
 # Access http://localhost:9101 and explore the bucket
@@ -273,14 +305,6 @@ This project demonstrates:
 - ✅ **Delta Lake** format (ACID, time travel)
 - ✅ **MVP Approach** (incremental value delivery)
 
-## 🤝 Design Decisions
-
-| Component | Azure Original | Alternative Chosen | Reason |
-|-----------|---------------|-------------------|--------|
-| Storage | Azure Data Lake Storage | MinIO (local) | No Azure account needed, S3-compatible |
-| Processing | Azure Synapse | Microsoft Fabric | Trial account available |
-| Orchestration | Azure Data Factory | Fabric Data Pipelines | Included in Fabric |
-| Visualization | Power BI Service | Power BI (Fabric) | Included in Fabric |
 
 ## 📚 Resources
 
@@ -290,10 +314,7 @@ This project demonstrates:
 - [PySpark Documentation](https://spark.apache.org/docs/latest/api/python/)
 - [Delta Lake](https://delta.io/)
 
-## 📄 License
 
-MIT License - Free to use in your portfolio
 
 ---
 
-**Built to demonstrate modern data engineering skills for professional portfolios**

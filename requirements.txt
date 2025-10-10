@@ -1,4 +1,10 @@
+# Core dependencies
 minio==7.2.0
-pandas==2.1.4
-numpy==1.26.2
 python-dotenv==1.0.0
+
+# Production features
+tenacity==8.2.3      # Retry logic
+tqdm==4.66.1         # Progress bars
+
+# Testing (optional)
+pytest==7.4.3
