@@ -1,6 +1,7 @@
 # Core dependencies
 minio==7.2.0
 python-dotenv==1.0.0
+boto3==1.34.34       # AWS S3 integration
 
 # Production features
 tenacity==8.2.3      # Retry logic

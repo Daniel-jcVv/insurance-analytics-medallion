@@ -58,6 +58,8 @@ End-to-end data engineering project implementing **Medallion Architecture** for 
 
 ## 🚀 Quick Start
 
+> **See [QUICKSTART.md](QUICKSTART.md) for detailed step-by-step setup instructions**
+
 ### 1. Environment Setup
 
 ```bash
@@ -92,15 +94,26 @@ docker ps
 
 ### 3. Upload Sample Data
 
+#### Option A: Local Development (MinIO)
 ```bash
 # Install dependencies
 pip install -r requirements.txt
 
-# Upload data to MinIO (simple version)
+# Upload data to MinIO
 python scripts/upload_to_minio.py
 
-# OR use production version (with retry logic and progress bars)
-python scripts/upload_to_minio_production.py
+# Run tests
+pytest tests/ -v
+```
+
+#### Option B: Cloud Storage (AWS S3) - **Recommended for Fabric**
+```bash
+# Configure AWS credentials in .env file
+cp .env.example .env
+# Edit .env and add your AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
+
+# Upload data to S3
+python scripts/upload_to_s3.py
 ```
 
 **Uploaded files:**
@@ -110,59 +123,33 @@ python scripts/upload_to_minio_production.py
 
 > **Note:** We use small datasets (50 records) for MVP - sufficient to validate logic and demonstrate understanding.
 
-### 3.1 Optional: Run Tests
+> **Cloud Integration:** Using AWS S3 allows Microsoft Fabric to connect directly via Amazon S3 connector, enabling automated data pipelines instead of manual uploads.
 
-```bash
-# Verify uploads work correctly
-pytest tests/ -v
-```
+### 4. Setup Microsoft Fabric (Cloud)
 
-### 4. Connect Fabric to MinIO
-
-#### Option A: Publicly Accessible MinIO (Ngrok/Tunneling)
-
-If you need Fabric to access your local MinIO:
-
-```bash
-# Install ngrok
-# https://ngrok.com/download
-
-# Expose MinIO port 9100
-ngrok http 9100
-```
-
-Use the public URL provided by ngrok (e.g., `https://xxxx.ngrok.io`)
-
-#### Option B: Manual Upload
-
-```bash
-# Export data for manual upload to Fabric
-# Files are in data/raw/
-```
-
-### 5. Configure Microsoft Fabric
-
-#### 5.1 Create Workspace and Lakehouse
+#### 4.1 Create Workspace and Lakehouse
 
 1. Go to [Microsoft Fabric](https://app.fabric.microsoft.com/)
 2. Create a new **Workspace** named `Insurance Analytics`
 3. Inside the workspace, create a **Lakehouse** named `insurance_lakehouse`
 
-#### 5.2 Create Data Pipeline
+#### 4.2 Connect Fabric to AWS S3
 
 1. In your workspace, create a new **Data Pipeline**
-2. Configure S3 connection (MinIO is S3-compatible):
-   - **Endpoint:** `http://your-ip:9100` or ngrok URL
-   - **Access Key:** `admin`
-   - **Secret Key:** `adminpassword123`
-   - **Bucket:** `insurance-data`
+2. Add **Copy Data** activity
+3. Configure **Source** with Amazon S3 connector:
+   - **Endpoint:** `https://s3.amazonaws.com` (or region-specific endpoint)
+   - **Access Key ID:** Your AWS_ACCESS_KEY_ID
+   - **Secret Access Key:** Your AWS_SECRET_ACCESS_KEY
+   - **Bucket:** `insurance-data-fabric` (or your S3_BUCKET name)
+   - **Region:** `us-east-1` (or your AWS_REGION)
+4. Select files from `bronze/` folder
+5. Configure **Destination** as your Lakehouse
+6. Run the pipeline to ingest data
 
-3. Create **Copy Data** activities for each file:
-   - `bronze/customers.csv` → `bronze/customers` Delta table
-   - `bronze/policies.csv` → `bronze/policies` Delta table
-   - `bronze/claims.csv` → `bronze/claims` Delta table
+> **See detailed setup:** [docs/AWS_SETUP.md](docs/AWS_SETUP.md) for step-by-step AWS S3 configuration
 
-#### 5.3 Create PySpark Notebooks
+#### 4.3 Create PySpark Notebooks
 
 See reference implementation in [Notebook+1.ipynb](Notebook+1.ipynb)
 
@@ -203,8 +190,9 @@ insurance-claims/
 │       └── claims.csv
 │
 ├── scripts/
-│   ├── upload_to_minio.py          # Simple upload script
-│   └── upload_to_minio_production.py  # Production version (retry + logging)
+│   ├── upload_to_minio.py          # Upload to MinIO (local dev)
+│   ├── upload_to_minio_production.py  # Production MinIO (retry + logging)
+│   └── upload_to_s3.py             # Upload to AWS S3 (cloud/Fabric)
 │
 ├── tests/
 │   ├── test_upload.py              # Integration tests
@@ -296,14 +284,32 @@ This project demonstrates:
 
 - ✅ **Medallion Architecture** (Bronze/Silver/Gold)
 - ✅ **End-to-End Data Engineering**
-- ✅ **Microsoft Fabric** (Lakehouse, Data Pipelines, PySpark)
+- ✅ **Microsoft Fabric** (Lakehouse, PySpark Notebooks)
 - ✅ **PySpark Processing** for cleaning and transformations
-- ✅ **S3/MinIO Integration**
+- ✅ **Object Storage Patterns** (S3-compatible MinIO)
 - ✅ **Power BI Visualization**
 - ✅ **Docker** for local infrastructure
-- ✅ **Python** for automation
+- ✅ **Python Automation** (upload scripts + integration tests)
 - ✅ **Delta Lake** format (ACID, time travel)
-- ✅ **MVP Approach** (incremental value delivery)
+- ✅ **Pragmatic Engineering** (simple first, complexity when justified)
+
+## 🎯 Architecture Strategy
+
+### Why MinIO + Fabric (instead of just Fabric)?
+
+**MinIO (Local Development):**
+- Practice S3 API integration patterns
+- Test data pipelines without cloud costs
+- Demonstrate infrastructure-as-code skills
+- Learn object storage concepts
+
+**Fabric (Cloud Demo):**
+- Showcase Medallion Architecture transformations
+- Demonstrate PySpark and Delta Lake expertise
+- Build Power BI dashboards
+- Prove cloud data engineering skills
+
+**Key Insight:** MinIO localhost cannot be accessed by cloud Fabric. For MVP, data is manually uploaded to Fabric Lakehouse. In production, this would be automated via Azure Data Lake Storage → Fabric Data Pipeline.
 
 
 ## 📚 Resources
