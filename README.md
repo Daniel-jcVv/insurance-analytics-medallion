@@ -9,7 +9,7 @@
 ![AWS S3](https://img.shields.io/badge/AWS%20S3-Cloud%20Storage-FF9900?logo=amazon-aws&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
 
-End-to-end insurance analytics platform processing claims data through automated ETL pipelines, from raw ingestion to executive dashboards.
+Insurance Claims Analytics - End-to-End Data Engineering
 
 > 💡 **Project Goal:** Build a scalable insurance claims analytics system demonstrating Medallion Architecture with Microsoft Fabric.
 
@@ -93,9 +93,7 @@ End-to-end insurance analytics platform processing claims data through automated
 └─────────────────────────────────────────────────────────────┘
 ```
 
-> **Note:** MinIO is available for local development with HTTPS tunneling (ngrok), but AWS S3 is the recommended production source for direct Fabric integration. ![MinIO vs AWS S3](./docs/MinIO/MinIO_issuess.md) 
-
-## 🏃 Quick Start
+## ⚡ Quick Start
 
 ```bash
 # 1. Clone and setup environment
@@ -117,6 +115,9 @@ python scripts/upload_to_minio_production.py  # Uses HTTPS endpoint
 # - Run notebooks: 01_Bronze_to_Silver.ipynb → 02_Silver_to_Gold.ipynb
 # - Open Power BI → Connect to Gold layer → Build dashboard
 ```
+
+
+> **Note:** MinIO is available for local development with HTTPS tunneling (ngrok), but AWS S3 is the recommended production source for direct Fabric integration. [MinIO vs AWS S3](./docs/MinIO/MinIO_issuess.md) 
 
 ---
 
@@ -203,7 +204,7 @@ insurance-claims/
 
 ### Stage 3: ANALYTICS - "It Answers Questions"
 - Tables joined (claims → policies → customers)
-- Gold aggregation table created (`gold_customer_claims_analytics`)
+- Gold aggregation table created (`gold_customer_claims_analytics`) [02_Silver_to_Gold.ipynb](fabric/notebooks/02_Silver_to_Gold.ipynb)
 - Business metrics calculated (approval rates, coverage ratios, temporal analysis)
 - Data quality checks implemented
 - Business insights generated
@@ -285,11 +286,20 @@ python scripts/upload_to_minio_production.py
 - **Microsoft Fabric:** Medallion Architecture implementation, PySpark transformations, Power BI dashboards
 
 
-## 📬 Contact
+## 📞 Contact Information
 
-- 📧 Email: daniel_ys1@outlook.com
-- 💼 [LinkedIn](www.linkedin.com/in/daniel-garcía-belman-99a298aae)
-- 🐙 GitHub: [Daniel-jcVv](https://github.com/Daniel-jcVv)
+**Daniel García Belman**  
+*Data Engineer | ETL Developer | Big Data*
+
+| Platform | Link |
+|----------|------|
+| **Email** | [daniel_ys1@outlook.com](mailto:daniel_ys1@outlook.com) |
+| **LinkedIn** | [Daniel García Belman](https://www.linkedin.com/in/daniel-garcía-belman-99a298aae) |
+| **GitHub** | [@Daniel-jcVv](https://github.com/Daniel-jcVv) |
+| **Location** | Celaya, Guanajuato, Mexico 🇲🇽 |
+|              | Querétaro, Querétaro, Mexico 🇲🇽 |
+| **Portfolio**| [Portfolio Website](https://danieljcvv-portfolio.vercel.app/)
+
 
 ---
 
