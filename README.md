@@ -212,22 +212,25 @@ insurance-claims/
 ### Stage 1: FOUNDATION - "It Works"
 - ✅ MinIO running in Docker
 - ✅ 50 records in each CSV file
-- 🔲 Fabric workspace created
-- 🔲 Data ingested to Bronze layer
+- ✅ AWS S3 bucket created and data uploaded
+- ✅ Fabric workspace created
+- ✅ Data ingested to Bronze layer (manual upload)
 
 ### Stage 2: TRANSFORMATION - "It's Clean"
-- 🔲 Silver layer notebook created
-- 🔲 Data cleaning implemented
-- 🔲 3 Silver Delta tables written
+- ✅ Silver layer notebook created (`01_Bronze_to_Silver.ipynb`)
+- ✅ Data cleaning implemented (dates, nulls, formatting)
+- ✅ 3 Silver Delta tables written
 
 ### Stage 3: ANALYTICS - "It Answers Questions"
-- 🔲 Tables joined (claims → policies → customers)
-- 🔲 Gold aggregation table created
-- 🔲 Business metrics calculated
+- ✅ Tables joined (claims → policies → customers)
+- ✅ Gold aggregation table created (`gold_customer_claims_analytics`)
+- ✅ Business metrics calculated (approval rates, coverage ratios, temporal analysis)
+- ✅ Data quality checks implemented
+- ✅ Business insights generated
 
 ### Stage 4: VISUALIZATION - "It's Presentable"
-- 🔲 Power BI connected to Gold layer
-- 🔲 Dashboard created
+- 🔲 Power BI report created
+- 🔲 Dashboard with KPIs and visualizations
 - 🔲 Portfolio screenshots captured
 
 ### Stage 5 (Optional): SCALE - "It Handles More"
