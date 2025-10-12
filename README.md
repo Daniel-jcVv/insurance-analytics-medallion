@@ -1,5 +1,15 @@
 # Insurance Claims Analytics - MinIO + Microsoft Fabric
 
+![Python](https://img.shields.io/badge/Python-3.8%2B-blue?logo=python&logoColor=white)
+![PySpark](https://img.shields.io/badge/PySpark-3.x-orange?logo=apache-spark&logoColor=white)
+![Microsoft Fabric](https://img.shields.io/badge/Microsoft%20Fabric-Lakehouse-blue?logo=microsoft&logoColor=white)
+![Power BI](https://img.shields.io/badge/Power%20BI-Dashboard-yellow?logo=powerbi&logoColor=white)
+![Delta Lake](https://img.shields.io/badge/Delta%20Lake-ACID-00ADD8?logo=delta&logoColor=white)
+![MinIO](https://img.shields.io/badge/MinIO-S3%20Compatible-C72E49?logo=minio&logoColor=white)
+![AWS S3](https://img.shields.io/badge/AWS%20S3-Cloud%20Storage-FF9900?logo=amazon-aws&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
+![Status](https://img.shields.io/badge/Status-Stage%204%20Complete-brightgreen)
+
 End-to-end data engineering project implementing **Medallion Architecture** for insurance claims analysis, using local MinIO and Microsoft Fabric for processing and visualization.
 
 > **Approach:** MVP (Minimum Viable Product) built incrementally in functional stages with small, manageable datasets (~50 records) to demonstrate data engineering skills.
@@ -44,8 +54,7 @@ End-to-end data engineering project implementing **Medallion Architecture** for 
 │  ├── KPI Dashboard                                           │
 │  ├── Top claimers analysis                                   │
 │  ├── Approval rate by gender/policy                          │
-│  ├── Temporal trends                                         │
-│  └── Demographic analysis                                    │
+│  ├── Temporal trends                                         │                                    │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -56,16 +65,13 @@ End-to-end data engineering project implementing **Medallion Architecture** for 
 - Microsoft Fabric trial account
 - Git
 
-## 🚀 Quick Start
-
-> **See [QUICKSTART.md](QUICKSTART.md) for detailed step-by-step setup instructions**
 
 ### 1. Environment Setup
 
 ```bash
 # Clone the repository
-git clone <your-repo>
-cd insurance-claims
+git clone https://github.com/Daniel-jcVv/insurance-analytics-medallion.git
+cd insurance-analytics-medallion
 
 # Create virtual environment
 python -m venv venv
@@ -147,11 +153,9 @@ python scripts/upload_to_s3.py
 5. Configure **Destination** as your Lakehouse
 6. Run the pipeline to ingest data
 
-> **See detailed setup:** [docs/AWS_SETUP.md](docs/AWS_SETUP.md) for step-by-step AWS S3 configuration
+
 
 #### 4.3 Create PySpark Notebooks
-
-See reference implementation in [Notebook+1.ipynb](Notebook+1.ipynb)
 
 **Bronze → Silver:**
 - Clean null values
@@ -172,6 +176,26 @@ This project provides insights into:
 3. **Temporal Trends:** Claims patterns over time
 4. **Policy Performance:** Claim activity by policy type
 5. **Demographics:** Claims by customer segments
+6. **Risk Analysis:** High-risk customers with claim-to-coverage ratio > 50%
+
+### Power BI Dashboard Features
+
+**Dashboard:** "Customer Claims Performance Report"
+
+**KPI Cards:**
+- Total Customers: 24
+- Total Claim Amount: $1.354M
+- Average Approval Rate: 22.65%
+- High Risk Customers: 7
+
+**Visualizations:**
+1. **Customer Distribution by Gender** - Donut chart showing gender breakdown
+2. **Policy Types Distribution** - Bar chart analyzing Life, Auto, and Health policies
+3. **Claims vs Coverage Analysis** - Scatter plot showing relationship by gender
+4. **Top 10 Customers by Total Claims** - Horizontal bar chart of highest claimers
+5. **Claims Volume Over Time** - Line chart showing temporal trends (2019-2023)
+
+📸 **Screenshot:** [power-bi/Customer-Claims-Performance-Report.png](power-bi/Customer-Claims-Performance-Report.png)
 
 ## 📁 Project Structure
 
@@ -192,19 +216,33 @@ insurance-claims/
 ├── scripts/
 │   ├── upload_to_minio.py          # Upload to MinIO (local dev)
 │   ├── upload_to_minio_production.py  # Production MinIO (retry + logging)
-│   └── upload_to_s3.py             # Upload to AWS S3 (cloud/Fabric)
+│   ├── upload_to_s3.py             # Upload to AWS S3 (cloud/Fabric)
+│ 
 │
 ├── tests/
 │   ├── test_upload.py              # Integration tests
 │   └── README.md                   # Test documentation
 │
-├── Notebook+1.ipynb                # Fabric notebook export (Bronze→Silver→Gold)
+├── fabric/
+│   └── notebooks/
+│       ├── 01_Bronze_to_Silver.ipynb   # Data cleaning & validation
+│       └── 02_Silver_to_Gold.ipynb     # Business metrics & analytics
+│
+├── power-bi/
+│   └── Customer-Claims-Performance-Report.png  # Dashboard screenshot
+│
+├── docs/
+│   └── screenshots/
+│       └── fabric/                 # Fabric workspace screenshots
+│           ├── 03-fabric-bronze-files.png
+│           ├── 05-fabric-silver-tables.png
+│           └── 06-fabric-gold-tables.png
+│
 │
 ├── minio/
 │   └── data/                       # MinIO persistent storage (gitignored)
-│
-└── notes/
-    └── *.md                        # Project notes and guides
+│___
+
 ```
 
 ## 🎯 Implementation Stages (MVP)
@@ -214,7 +252,7 @@ insurance-claims/
 - ✅ 50 records in each CSV file
 - ✅ AWS S3 bucket created and data uploaded
 - ✅ Fabric workspace created
-- ✅ Data ingested to Bronze layer (manual upload)
+
 
 ### Stage 2: TRANSFORMATION - "It's Clean"
 - ✅ Silver layer notebook created (`01_Bronze_to_Silver.ipynb`)
@@ -229,9 +267,9 @@ insurance-claims/
 - ✅ Business insights generated
 
 ### Stage 4: VISUALIZATION - "It's Presentable"
-- 🔲 Power BI report created
-- 🔲 Dashboard with KPIs and visualizations
-- 🔲 Portfolio screenshots captured
+- ✅ Power BI report created (`Customer Claims Performance Report`)
+- ✅ Dashboard with KPIs and visualizations
+- ✅ Portfolio screenshots captured
 
 ### Stage 5 (Optional): SCALE - "It Handles More"
 - 🔲 Script to generate 200-500 records
@@ -285,15 +323,17 @@ python scripts/upload_to_minio_production.py
 
 This project demonstrates:
 
-- ✅ **Medallion Architecture** (Bronze/Silver/Gold)
-- ✅ **End-to-End Data Engineering**
-- ✅ **Microsoft Fabric** (Lakehouse, PySpark Notebooks)
-- ✅ **PySpark Processing** for cleaning and transformations
-- ✅ **Object Storage Patterns** (S3-compatible MinIO)
-- ✅ **Power BI Visualization**
+- ✅ **Medallion Architecture** (Bronze/Silver/Gold) - Complete implementation
+- ✅ **End-to-End Data Engineering** - From raw data to business insights
+- ✅ **Microsoft Fabric** (Lakehouse, PySpark Notebooks, Power BI)
+- ✅ **PySpark Processing** - Data cleaning, transformations, and aggregations
+- ✅ **Object Storage Patterns** (S3-compatible MinIO + AWS S3)
+- ✅ **Power BI Dashboards** - Interactive analytics with 5 visualizations + 4 KPIs
 - ✅ **Docker** for local infrastructure
 - ✅ **Python Automation** (upload scripts + integration tests)
-- ✅ **Delta Lake** format (ACID, time travel)
+- ✅ **Delta Lake** format (ACID transactions, time travel)
+- ✅ **Data Quality Checks** - Validation and business logic
+- ✅ **Cloud Integration** - AWS S3 → Fabric pipeline
 - ✅ **Pragmatic Engineering** (simple first, complexity when justified)
 
 ## 🎯 Architecture Strategy
