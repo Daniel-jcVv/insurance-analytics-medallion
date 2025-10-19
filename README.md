@@ -354,6 +354,15 @@ This project demonstrates:
 
 **Key Insight:** MinIO localhost cannot be accessed by cloud Fabric. For MVP, data is manually uploaded to Fabric Lakehouse. In production, this would be automated via Azure Data Lake Storage → Fabric Data Pipeline.
 
+---
+
+## 🙏 Acknowledgments
+>
+>**Ora et labora, ahora**
+>**Soli Deo gloria**
+>My gratitude to the open-source community for generously sharing their knowledge.
+
+---
 
 ## 📚 Resources
 
